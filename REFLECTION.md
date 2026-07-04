@@ -1,65 +1,35 @@
-# Reflection And Technical Ownership
-
-## Personal Implementation
-
-We implemented an end-to-end univariate time series forecasting workflow for weekly influenza-like illness activity.
-
-Main implemented parts:
-
-- Loaded and cleaned the ILINet CSV export.
-- Converted `YEAR` and `WEEK` into a continuous weekly date index.
-- Selected `%UNWEIGHTED ILI` as the target variable.
-- Plotted and decomposed the time series.
-- Tested stationarity using ADF and Phillips-Perron.
-- Inspected ACF and PACF before and after differencing.
-- Fit and compared several SARIMA candidate models.
-- Evaluated the selected SARIMA model on the final 52 weeks.
-- Checked residual diagnostics using standardized residuals, residual ACF, Ljung-Box, QQ plot, and Shapiro-Wilk.
-- Produced a final 52-week forecast with confidence intervals.
+# Reflection
 
 ## What Failed Or Was Limited
 
-The SARIMA model captured the general seasonal structure but did not forecast the sharp December 2025 ILI peak well. The model underestimated the largest outbreak weeks.
+The main limitation was that the SARIMA forecast did not capture the sharp ILI peak near the end of the test period very well. The model learned the general seasonal pattern, but it underestimated the strongest outbreak weeks.
 
-The residual diagnostics were mixed. Ljung-Box results did not show strong remaining autocorrelation, but the QQ plot and Shapiro-Wilk test showed that residuals were not normally distributed.
+Another limitation was the residual normality. The Ljung-Box test did not show strong remaining autocorrelation, which suggested that the residuals were close to white noise in terms of dependence. However, the QQ plot and Shapiro-Wilk test showed that the residuals were not normally distributed. This means the confidence intervals should be interpreted carefully, especially during extreme outbreak periods.
 
 ## Technical Challenges
 
-One challenge was deciding whether to difference the series. ADF and Phillips-Perron indicated that the original series was already stationary, while the ACF still showed strong seasonality. This required separating stationarity from seasonality.
+One of the main technical challenges was choosing the SARIMA orders manually. I had to connect the visual ACF/SACF and PACF plots to possible AR, MA, seasonal AR, and seasonal MA terms. This was not automatic, because several lags looked relevant, especially around the seasonal lags of 52 and 104 weeks.
 
-Another challenge was selecting SARIMA candidates manually without using auto-ARIMA. The final model was selected by lowest AIC among a small set of lecture-based candidates and then checked using test-set errors and diagnostics.
+Another challenge was deciding which candidate models were reasonable without testing every possible combination. I used the lecture rules for ARIMA/SARIMA identification, but I also had to avoid overfitting and over-differencing. This led me to compare a focused set of ARIMA and SARIMA models instead of depending on an automatic model-selection tool.
 
-## What We Learned
+After fitting the candidate models, I also had to decide whether the lowest AIC model was really the best final model. A more complex model can improve AIC slightly while adding parameters that are harder to justify. Therefore, I compared the top models using AIC, BIC, coefficient confidence intervals, test-set errors, and model simplicity.
 
-We learned that a series can pass stationarity tests and still have strong seasonal dependence. We also learned that residual diagnostics are essential: a model can have reasonable autocorrelation diagnostics but still fail normality checks because of extreme outbreak behavior.
+## What I Learned
 
-The project also showed that epidemiological time series are difficult to forecast with a univariate model because sudden outbreaks may depend on external factors not present in the dataset.
+I learned how the theoretical methods from the lectures connect to the practical implementation in Python. Concepts such as stationarity, differencing, ACF/SACF, PACF, AR terms, MA terms, seasonal orders, AIC/BIC, and residual diagnostics became much clearer when I had to apply them to a real dataset.
 
-## Failure Log
+I also learned that the lecture workflow is not just a list of separate steps. Each step affects the next one: stationarity tests influence differencing choices, ACF/PACF plots influence model orders, model comparison influences final selection, and residual diagnostics show whether the model still missed important structure.
 
-1. Regular differencing was considered, but stationarity tests showed the original series already rejected a unit root. This raised the risk of overdifferencing.
+This project helped me understand the difference between knowing the theory and making modeling decisions in practice. In the notebook, I had to translate the course ideas into code, plots, tables, interpretation, and final decisions that I could explain.
 
-2. Several SARIMA candidates were tested. Models with higher AIC or worse test-set errors were not selected.
+## What Surprised Me
 
-3. The selected SARIMA model underestimated the December 2025 peak, showing that the model is limited during unusually sharp outbreaks.
+What surprised me most was that even after implementing the theoretical best practices I learned in class, the forecast still did not work very well for the sharp ILI peak. I followed the expected workflow but still, the final SARIMA model underestimated the strongest outbreak weeks.
+
+This showed me that building the best prediction model usually requires more fine tuning beyond the basic theoretical workflow. A classical SARIMA model can be a good baseline, but real public-health data may need additional work.
 
 ## Future Improvements
 
-Possible improvements:
+In the future, I would improve the project by adding external explanatory variables, such as weather, vaccination rates, school calendar indicators, holidays, or public-health events. These variables may help explain sudden changes that a univariate SARIMA model cannot capture.
 
-- Add exogenous variables such as weather, vaccination rates, or school calendar indicators.
-- Compare against additional models after the SARIMA baseline is finalized.
-- Try transformations or robust error modeling to reduce the effect of extreme peaks.
-- Use rolling-origin validation instead of a single 52-week holdout.
-
-## Team Contribution Log
-
-Fill this section before submission.
-
-```text
-Student 1:
-- 
-
-Student 2:
-- 
-```
+Finally, I would explore methods for handling outliers and extreme peaks more carefully. Since ILI data can have unusual outbreak weeks, robust modeling or transformations may improve forecast reliability and uncertainty intervals.
