@@ -6,6 +6,6 @@ Codex helped me organize the notebook structure, write and revise Python code fo
 
 The AI tool was used for coding assistance, organization, and explanation.
 
-I manually reviewed, edited, and ran the notebook cells.
+I manually reviewed, edited, and ran the notebook cells. I also checked the dataset preparation, ACF/PACF interpretation, stationarity decisions, model comparison, coefficient interpretation, residual diagnostics, and final conclusions. i also chose the SARIMA orders manually (did not use auto sarima).
 
 The final responsibility for the submitted code, explanations, plots, model choice, and interpretation is mine. I must be able to explain every part of the notebook and the modeling process in the oral mini-defense.
