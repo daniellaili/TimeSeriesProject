@@ -1,7 +1,11 @@
 # AI Usage Disclosure
 
-| Tool | Task | Extent | Human edits | Verification |
-|---|---|---|---|---|
-| OpenAI Codex | Helped structure the notebook, implement Python code for EDA, diagnostics, and forecasting, and align the workflow with the final project requirements. | Support tool for coding and organization; not a replacement for understanding or manual interpretation. | The student/team must review, run, edit, and explain every cell and every modeling decision. | Outputs, plots, ACF/PACF significance, stationarity decisions, residual diagnostics, and conclusions must be independently verified before submission. |
+I used OpenAI Codex as a support tool during this project.
 
-Important: ACF/PACF interpretation and model selection should be checked manually. Do not submit results that you cannot explain in the oral mini-defense.
+Codex helped me organize the notebook structure, write and revise Python code for EDA, stationarity checks, ARIMA/SARIMA modeling, residual diagnostics, and forecasting. It also helped me align the project files with the final project requirements.
+
+The AI tool was used for coding assistance, organization, and explanation.
+
+I manually reviewed, edited, and ran the notebook cells.
+
+The final responsibility for the submitted code, explanations, plots, model choice, and interpretation is mine. I must be able to explain every part of the notebook and the modeling process in the oral mini-defense.
